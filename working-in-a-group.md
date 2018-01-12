@@ -38,5 +38,5 @@ Git and GitHub are designed for team projects, so their are only a couple things
 
 3. A final note on human conflicts:
 
-You know Dr. House? That character that is so good at his job that he can act like a total asshole? That guy is a loser. If that sort of attitude worked for software teams, Uber would have self flying cars by now, instead of 10 scandals, a million lawsuits, and the exact same app as Lyft. Don't be Uber, be Lyft. (Those folks are nice).
+	You know Dr. House? That character that is so good at his job that he can act like a total asshole? That guy is a loser. If that sort of attitude worked for software teams, Uber would have self flying cars by now, instead of 10 scandals, a million lawsuits, and the exact same app as Lyft. Don't be Uber, be Lyft. (Those folks are nice).
 
