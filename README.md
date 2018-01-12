@@ -28,6 +28,9 @@ This lab begins with a basic front-end to display a list of music albums.  As we
 * support storing song information (with full CRUD) (mongoose embedded)
 * add a second major route for artist information  (mongoose reference)
 
+### On Working in Groups
+
+Refer to [this markdown file](https://git.generalassemb.ly/WDIplus-ATX/Tunely-Lab/blob/master/working-in-a-group.md) for advice on how to work in a group. 
 
 ### Project Planning
 
