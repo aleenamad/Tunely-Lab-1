@@ -1,6 +1,10 @@
-# tunely lab
+![GA Cog](https://camo.githubusercontent.com/6ce15b81c1f06d716d753a61f5db22375fa684da/68747470733a2f2f67612d646173682e73332e616d617a6f6e6177732e636f6d2f70726f64756374696f6e2f6173736574732f6c6f676f2d39663838616536633963333837313639306533333238306663663535376633332e706e67)
+# Welcome to Tunely lab
 
-Full CRUD SPA with mongoose and Express.
+This is a Full CRUD project using Express 
+- For this lab we'll be working in teams!
+ * Standby for further intruction from your instructors as to which team you'll be joining.
+ * Be prepared to have a remote teammate _This is also very real-world like too_
 
 Prerequisites:
 * jQuery, AJAX
@@ -44,7 +48,6 @@ In the above you can see we're building a site that displays a list of musical a
 
 
 ## Getting Started
-
 * fork and clone this lab repo
 * read this doc then proceed to sprint 1
 
