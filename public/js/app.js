@@ -54,11 +54,23 @@
 $(document).ready(function(){
 
   $albumList = $('#albums');
+
   $.ajax({
     method: 'GET',
     url: '/api/albums',
     success: handleSuccess,
     error: handleError
+  });
+
+  $('#addNewAlbum').on('submit', (e) => {
+    e.preventDefault();
+    $.ajax({
+      method: 'POST',
+      url: '/api/albums',
+      data: $(this).serialize(),
+      success: newAlbumSuccess,
+      error: newAlbumError
+    });
   });
 });
 
@@ -121,7 +133,15 @@ function render () {
   $albumList.append(albumsHtml);
 };
 
+function newAlbumSuccess(json) {
+  $('#newAlbumForm input').val('');
+  allAlbums.push(json);
+  render();
+}
 
+function newAlbumError() {
+  console.log('new album error!');
+}
 
 
 
@@ -186,3 +206,7 @@ function renderAlbum(album) {
   // render to the page with jQuery
     $('#albums').prepend(albumHtml);
 }
+
+$('#singleButton').click(() => {
+
+})

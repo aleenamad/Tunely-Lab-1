@@ -5,7 +5,9 @@ var express = require('express');
 // generate a new express app and call it 'app'
 var app = express();
 const mongoose = require('mongoose');
-
+const bodyParser = require('body-parser');
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
 // serve static files from public folder
 app.use(express.static(__dirname + '/public'));
 // const albumsRoute = require('./routes/albums');
@@ -53,6 +55,18 @@ app.get('/api/albums', (request, response) => {
     response.json(albums);
   });
 });
+
+app.post('/api/albums', (request, response) => {
+  let album = new db.Album(request.body);
+  db.Album.save((err, createdAlbumObject) => {
+    if (err) {
+        response.status(500).send(err);
+    }
+    // This createdTodoObject is the same one we saved, but after Mongo
+    // added its additional properties like _id.
+    response.redirect('/');
+  });
+})
 
 /**********
  * SERVER *
