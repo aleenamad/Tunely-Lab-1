@@ -6,6 +6,12 @@
  */
 
 
+
+ var $albumList;
+ var allAlbums = [];
+
+
+
 /* hard-coded data! */
 var sampleAlbums = [];
 sampleAlbums.push({
@@ -43,6 +49,35 @@ $(document).ready(function() {
     renderAlbum(sampleAlbums[i]);
   }
 });
+
+
+$(document).ready(function(){
+
+  $albumList = $('#albums');
+  $.ajax({
+    method: 'GET',
+    url: '/api/albums',
+    success: handleSuccess,
+    error: handleError
+  });
+
+
+
+
+
+
+
+
+  function handleSuccess(json) {
+    allAlbums = json;
+    render();
+  }
+
+  function handleError(e) {
+    console.log('uh oh');
+    $('#albums').text('Failed to load albums, is the server working?');
+  }
+
 
 
 
