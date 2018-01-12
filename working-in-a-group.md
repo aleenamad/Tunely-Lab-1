@@ -1,8 +1,8 @@
-### Working in a group
+# Working in a group
 
 Working in a group presents challenges from conflicting ideas to conflicting git commmits! Here are some best practices: 
 
-#### Conflicting Ideas
+## Conflicting Ideas
 
 Alex had a manager at Asurion who was great, and everyone loved. One of his biggest peeves was engineers arguing over their opinions. In interviews, he would ask: 
 
@@ -12,7 +12,7 @@ He would tell engineers "Decide, or I'll decide for you. And I have no idea, so 
 
 When team members dissagree on something, it's often partly about making the right tech decision, and partly about ego. The ego part slows everything down. Let that go, ask a third party their oppinion, accept it, and move on. 
 
-#### Conflicting Commits
+## Conflicting Commits
 
 Git and GitHub are designed for team projects, so their are only a couple things to keep in mind. 
 
