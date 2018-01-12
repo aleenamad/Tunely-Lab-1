@@ -87,4 +87,12 @@ In the above you can see we're building a site that displays a list of musical a
 [Sprint 6: update song info & delete songs](/docs/sprint6.md)
 
 
-### Module C: Full CRUD with Mongo and reference relationships.
+### Module C: Full CRUD with Mongo and embedded relationships.
+
+Use what we learned this week to create a relationship between Albums and Songs! Update your routes accordingly. 
+
+### Bonus:
+
+- Style the heck out of this. Make you group's the most beautiful of all!
+- Make it responsive, so it looks beautiful on your phone. 
+- Add new features, let your imagination run wild!
