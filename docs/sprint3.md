@@ -64,7 +64,7 @@ We're going to use this data for all albums for now, even though it's not accura
 
 1. Fix any issues you encounter, until you can see that it's also adding songs for each album.
 
-## Step 3: display
+## Step 3: Display
 
 Let's go back to `app.js` and our html.  If you check the output of your AJAX call, you should see that we're already retrieving songs with each album.  Double-check this before you proceed.  
 
@@ -77,7 +77,6 @@ For now we're just going to make this super simple and output something like:
   <span>	– (1) Swamped – (2) Heaven's a Lie – (3) Daylight Dancer – (4) Humane – (5) Self Deception – (6) Aeon – (7) Tight Rope – </span>
 </li>
 ```
-
 
 1. In `app.js`, create a new function `function buildSongsHtml(songs) {}`
 
@@ -106,6 +105,7 @@ function buildSongsHtml(songs) {
 
 1. Now call `buildSongsHtml` from inside `renderAlbum`. Use it to add the 4th `<li>` to each album.
 
+## ...Or you can stick to a familiar method and use EJS to template your data :sunglasses:
 
 ## Step 4: Create Songs
 
