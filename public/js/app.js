@@ -39,7 +39,9 @@ sampleAlbums.push({
 
 $(document).ready(function() {
   console.log('app.js loaded!');
-  renderAlbum(sampleAlbums[0]);
+  for (let i = 0; i < sampleAlbums.length; i++) {
+    renderAlbum(sampleAlbums[i]);
+  }
 });
 
 
