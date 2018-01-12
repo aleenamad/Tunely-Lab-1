@@ -7,6 +7,8 @@ var app = express();
 
 // serve static files from public folder
 app.use(express.static(__dirname + '/public'));
+// const albumsRoute = require('./routes/albums');
+
 
 /************
  * DATABASE *
@@ -71,6 +73,11 @@ app.get('/api', function api_index (req, res){
       {method: "GET", path: "/api", description: "Describes available endpoints"}
     ]
   });
+});
+
+app.get('/api/albums', (request, response) => {
+  console.log(albums);
+  response.json(albums);
 });
 
 /**********
