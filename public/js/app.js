@@ -90,5 +90,5 @@ function renderAlbum(album) {
   "          <!-- end one album -->";
 
   // render to the page with jQuery
-    $('#albums').prepend(albumHTML);
+    $('#albums').prepend(albumHtml);
 }
