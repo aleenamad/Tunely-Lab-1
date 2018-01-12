@@ -96,3 +96,6 @@ Use what we learned this week to create a relationship between Albums and Songs!
 - Style the heck out of this. Make you group's the most beautiful of all!
 - Make it responsive, so it looks beautiful on your phone. 
 - Add new features, let your imagination run wild!
+
+### Extra Bonus: 
+- Add OAuth!
