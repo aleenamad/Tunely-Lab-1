@@ -67,7 +67,12 @@ $(document).ready(function(){
     $.ajax({
       method: 'POST',
       url: '/api/albums',
-      data: $(this).serialize(),
+      data: {
+        name: e.currentTarget["1"].value,
+        artistName: e.currentTarget["2"].value,
+        releaseDate: e.currentTarget["3"].value,
+        genres: e.currentTarget["4"].value.split(',')
+      },
       success: newAlbumSuccess,
       error: newAlbumError
     });
@@ -134,7 +139,7 @@ function render () {
 };
 
 function newAlbumSuccess(json) {
-  $('#newAlbumForm input').val('');
+  $("input[type=text], textarea").val("");
   allAlbums.push(json);
   render();
 }
@@ -206,7 +211,3 @@ function renderAlbum(album) {
   // render to the page with jQuery
     $('#albums').prepend(albumHtml);
 }
-
-$('#singleButton').click(() => {
-
-})
