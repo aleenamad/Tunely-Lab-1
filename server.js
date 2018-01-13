@@ -58,13 +58,11 @@ app.get('/api/albums', (request, response) => {
 
 app.post('/api/albums', (request, response) => {
   let album = new db.Album(request.body);
-  db.Album.save((err, createdAlbumObject) => {
+  album.save((err, createdAlbumObject) => {
     if (err) {
         response.status(500).send(err);
     }
-    // This createdTodoObject is the same one we saved, but after Mongo
-    // added its additional properties like _id.
-    response.redirect('/');
+    response.status(200).send(createdAlbumObject);
   });
 })
 
