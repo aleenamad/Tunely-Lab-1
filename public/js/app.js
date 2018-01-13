@@ -79,6 +79,24 @@ $(document).ready(function(){
   });
 });
 
+function getSongHtml(song) {
+  let currentSongHtml =
+  "<li class='list-group-item'>" +
+   song.trackNumber + " - " + song.name +
+  "</li>";
+  return currentSongHtml;
+}
+
+function buildSongsHtml(songs) {
+ let songList = songs.map(getSongHtml).join("");
+ let songsHtml =
+ "<ul>" +
+ "<h4 class='inline-header'>Songs:</h4>" +
+ songList +
+ "</ul>"
+ return songsHtml;
+}
+
 
 function getAlbumHtml(album) {
   let currentAlbumHtml =
@@ -106,6 +124,7 @@ function getAlbumHtml(album) {
   "                        <h4 class='inline-header'>Released date:</h4>" +
   "                        <span class='album-releaseDate'>" + album.releaseDate + "</span>" +
   "                      </li>" +
+  buildSongsHtml(album.songs) +
   "                    </ul>" +
   "                  </div>" +
   "                </div>" +
