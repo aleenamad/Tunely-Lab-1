@@ -66,6 +66,26 @@ app.post('/api/albums', (request, response) => {
   });
 })
 
+app.post('/api/albums/:album_id/songs', (request, response) => {
+  db.Album.findById(request.body.album_id, (err, album) => {
+    if (err) {
+      console.log('failed in first if statement');
+      response.status(500).send(err);
+    } else {
+      let newSong = new db.Song(request.body.song)
+      album.songs.push(newSong);
+      console.log(album);
+      album.save((err, updatedAlbumObject) => {
+        if (err) {
+          console.log('failed in second if statment');
+          response.status(500).send(err);
+        }
+        response.status(200).send(updatedAlbumObject);
+      })
+    }
+  })
+})
+
 /**********
  * SERVER *
  **********/

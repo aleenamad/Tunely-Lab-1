@@ -77,7 +77,38 @@ $(document).ready(function(){
       error: newAlbumError
     });
   });
+  $(document).on('click', '.add-song', function(e) {
+      console.log('asdfasdfasdf');
+      var currentAlbumId = $(this).parents('.album').data('album-id');
+      $('#songModal').attr('data-album-id', currentAlbumId);
+  });
+  $('#saveSong').click((e) => {
+    handleNewSongSubmit(e);
+  });
 });
+
+const handleNewSongSubmit = (e) => {
+  e.preventDefault();
+  console.log(e);
+  let targetAlbumId = e.target.parentElement.parentNode.parentNode.parentNode.dataset.albumId;
+  let url = '/api/albums/' + targetAlbumId + '/songs';
+  $.ajax({
+    method: 'POST',
+    url: url,
+    data: {
+      song: {
+        name: e.target.parentNode.parentNode.childNodes[3].childNodes[1].childNodes[3].childNodes[3].childNodes[1].value,
+        trackNumber: e.target.parentNode.parentNode.childNodes[3].childNodes[1].childNodes[7].childNodes[3].childNodes[1].value
+      },
+      album_id: targetAlbumId
+    },
+    success: newSongSuccess,
+    error: newSongError
+  })
+  $('#songModal').modal();
+}
+
+
 
 function getSongHtml(song) {
   let currentSongHtml =
@@ -133,6 +164,7 @@ function getAlbumHtml(album) {
   "              </div>" + // end of panel-body
 
   "              <div class='panel-footer'>" +
+  "<button type='button' class='btn btn-primary add-song' data-toggle='modal' data-target='#songModal'>Add Song</button>" +
   "              </div>" +
 
   "            </div>" +
@@ -165,6 +197,20 @@ function newAlbumSuccess(json) {
 
 function newAlbumError() {
   console.log('new album error!');
+}
+
+function newSongSuccess(json) {
+  $("#songName").val("");
+  $("#trackNumber").val("");
+  console.log(json)
+  // for (let i = 0; i < allAlbums.length; i++) {
+  //   if (json._id)
+  // }
+  render();
+}
+
+function newSongError() {
+  console.log('new song error!');
 }
 
 
