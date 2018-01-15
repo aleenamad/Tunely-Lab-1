@@ -85,7 +85,7 @@ app.post('/api/albums/:album_id/songs', (request, response) => {
   db.Album.findByIdAndUpdate(
     request.body.album_id,
     {$push: {songs: request.body.song}},
-    {safe: true, upsert: true},
+    {safe: true, upsert: true, new: true},
     function(err, model) {
       if (err) {
         response.status(500).send(err);

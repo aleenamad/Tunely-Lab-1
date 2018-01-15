@@ -93,13 +93,6 @@ $(document).ready(function(){
       handleNewSongSubmit(e);
     }
   });
-  //*********
-  // quick fix to make new songs show up on page - should be removed once better
-  // solution is found:
-  $(document).on('hidden.bs.modal', () => {
-   location.reload();
-  })
-  //*********
 });
 
 const handleNewSongSubmit = (e) => {
@@ -220,30 +213,22 @@ function newSongSuccess(json) {
       allAlbums.splice(i, 1, json);
     }
   }
-  //*** render() currently not working *** - meant to update albums display on page
   render();
-  //***
 }
 
 function newSongError() {
   console.log('new song error!');
 }
 
+function handleSuccess(json) {
+  allAlbums = json;
+  render();
+}
 
-
-  function handleSuccess(json) {
-    allAlbums = json;
-    render();
-  }
-
-  function handleError(e) {
-    console.log('uh oh');
-    $('#albums').text('Failed to load albums, is the server working?');
-  }
-
-
-
-
+function handleError(e) {
+  console.log('uh oh');
+  $('#albums').text('Failed to load albums, is the server working?');
+}
 
 
 // this function takes a single album and renders it to the page
