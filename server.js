@@ -56,6 +56,21 @@ app.get('/api/albums', (request, response) => {
   });
 });
 
+app.get('/api/albums/:id', (request, response) => {
+  db.Album.findById(request.params.id, (err, album) => {
+    response.json(album);
+  })
+})
+
+app.get('/api/albums/:album_id/songs', (request, response) => {
+  db.Album.findById(request.params.album_id, (err, album) => {
+    if (err) {
+        response.status(500).send(err);
+    }
+    response.json(album.songs);
+  })
+})
+
 app.post('/api/albums', (request, response) => {
   let album = new db.Album(request.body);
   album.save((err, createdAlbumObject) => {
@@ -67,23 +82,17 @@ app.post('/api/albums', (request, response) => {
 })
 
 app.post('/api/albums/:album_id/songs', (request, response) => {
-  db.Album.findById(request.body.album_id, (err, album) => {
-    if (err) {
-      console.log('failed in first if statement');
-      response.status(500).send(err);
-    } else {
-      let newSong = new db.Song(request.body.song)
-      album.songs.push(newSong);
-      console.log(album);
-      album.save((err, updatedAlbumObject) => {
-        if (err) {
-          console.log('failed in second if statment');
-          response.status(500).send(err);
-        }
-        response.status(200).send(updatedAlbumObject);
-      })
+  db.Album.findByIdAndUpdate(
+    request.body.album_id,
+    {$push: {songs: request.body.song}},
+    {safe: true, upsert: true},
+    function(err, model) {
+      if (err) {
+        response.status(500).send(err);
+      }
+      response.status(200).send(model);
     }
-  })
+  );
 })
 
 /**********

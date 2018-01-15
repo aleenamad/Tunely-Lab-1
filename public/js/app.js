@@ -77,19 +77,33 @@ $(document).ready(function(){
       error: newAlbumError
     });
   });
+
+  //adds event listener to "Add Song" buttons
   $(document).on('click', '.add-song', function(e) {
-      console.log('asdfasdfasdf');
+      //retrieves album id associated with the add song button that was clicked
       var currentAlbumId = $(this).parents('.album').data('album-id');
+      //adds album id as a data attribute to the song modal so it can be passed into the ajax call later
       $('#songModal').attr('data-album-id', currentAlbumId);
   });
+
+
   $('#saveSong').click((e) => {
-    handleNewSongSubmit(e);
+    //checks to see that both text fields have data in them before running the handleNewSongSubmit function
+    if (e.target.parentNode.parentNode.childNodes[3].childNodes[1].childNodes[3].childNodes[3].childNodes[1].value !== "" && e.target.parentNode.parentNode.childNodes[3].childNodes[1].childNodes[7].childNodes[3].childNodes[1].value !== "") {
+      handleNewSongSubmit(e);
+    }
   });
+  //*********
+  // quick fix to make new songs show up on page - should be removed once better
+  // solution is found:
+  $(document).on('hidden.bs.modal', () => {
+   location.reload();
+  })
+  //*********
 });
 
 const handleNewSongSubmit = (e) => {
   e.preventDefault();
-  console.log(e);
   let targetAlbumId = e.target.parentElement.parentNode.parentNode.parentNode.dataset.albumId;
   let url = '/api/albums/' + targetAlbumId + '/songs';
   $.ajax({
@@ -105,7 +119,6 @@ const handleNewSongSubmit = (e) => {
     success: newSongSuccess,
     error: newSongError
   })
-  $('#songModal').modal();
 }
 
 
@@ -181,10 +194,8 @@ function getAllAlbumsHtml(albums) {
 function render () {
   // empty existing posts from view
   $albumList.empty();
-
-  // pass `allBooks` into the template function
+  // pass `allAlbums` into the template function
   var albumsHtml = getAllAlbumsHtml(allAlbums);
-
   // append html to the view
   $albumList.append(albumsHtml);
 };
@@ -200,13 +211,18 @@ function newAlbumError() {
 }
 
 function newSongSuccess(json) {
+  //clear fields in add new song modal
   $("#songName").val("");
   $("#trackNumber").val("");
-  console.log(json)
-  // for (let i = 0; i < allAlbums.length; i++) {
-  //   if (json._id)
-  // }
+  //find updated album id and replace album with updated version
+  for (let i = 0; i < allAlbums.length; i++) {
+    if (json._id === allAlbums[i]._id) {
+      allAlbums.splice(i, 1, json);
+    }
+  }
+  //*** render() currently not working *** - meant to update albums display on page
   render();
+  //***
 }
 
 function newSongError() {
