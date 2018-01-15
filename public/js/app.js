@@ -77,7 +77,99 @@ $(document).ready(function(){
       error: newAlbumError
     });
   });
+
+  //adds event listener to "Add Song" buttons
+  $(document).on('click', '.add-song', function(e) {
+      //retrieves album id associated with the add song button that was clicked
+      var currentAlbumId = $(this).parents('.album').data('album-id');
+      //adds album id as a data attribute to the song modal so it can be passed into the ajax call later
+      $('#songModal').attr('data-album-id', currentAlbumId);
+  });
+
+
+  $('#saveSong').click((e) => {
+    //checks to see that both text fields have data in them before running the handleNewSongSubmit function
+    if (e.target.parentNode.parentNode.childNodes[3].childNodes[1].childNodes[3].childNodes[3].childNodes[1].value !== "" && e.target.parentNode.parentNode.childNodes[3].childNodes[1].childNodes[7].childNodes[3].childNodes[1].value !== "") {
+      handleNewSongSubmit(e);
+    }
+  });
+
+  $(document).on('click', '.delete', (e) => {
+    handleDeleteButton(e);
+  })
+
+  $(document).on('click', '.edit-album', (e) => {
+    handleEditAlbumButton(e);
+  })
 });
+
+const handleEditAlbumButton = (e) => {
+  e.preventDefault();
+  console.log(e);
+}
+
+const handleNewSongSubmit = (e) => {
+  e.preventDefault();
+  let targetAlbumId = e.target.parentElement.parentNode.parentNode.parentNode.dataset.albumId;
+  let url = '/api/albums/' + targetAlbumId + '/songs';
+  $.ajax({
+    method: 'POST',
+    url: url,
+    data: {
+      song: {
+        name: e.target.parentNode.parentNode.childNodes[3].childNodes[1].childNodes[3].childNodes[3].childNodes[1].value,
+        trackNumber: e.target.parentNode.parentNode.childNodes[3].childNodes[1].childNodes[7].childNodes[3].childNodes[1].value
+      },
+      album_id: targetAlbumId
+    },
+    success: newSongSuccess,
+    error: newSongError
+  })
+}
+
+const handleDeleteButton = (e) => {
+  e.preventDefault();
+  let targetAlbumId = e.target.parentElement.parentNode.parentNode.parentNode.dataset.albumId;
+  let url = '/api/albums/' + targetAlbumId;
+  $.ajax({
+    method: 'DELETE',
+    url: url,
+    success: deleteAlbumSuccess,
+    error: deleteAlbumError
+  })
+}
+
+const deleteAlbumSuccess = (json) => {
+  for (let i = 0; i < allAlbums.length; i++) {
+    if (json._id === allAlbums[i]._id) {
+      allAlbums.splice(i, 1);
+    }
+  }
+  render();
+}
+
+const deleteAlbumError = () => {
+  console.log('delete album error!');
+}
+
+
+function getSongHtml(song) {
+  let currentSongHtml =
+  "<li class='list-group-item'>" +
+   song.trackNumber + " - " + song.name +
+  "</li>";
+  return currentSongHtml;
+}
+
+function buildSongsHtml(songs) {
+ let songList = songs.map(getSongHtml).join("");
+ let songsHtml =
+ "<ul>" +
+ "<h4 class='inline-header'>Songs:</h4>" +
+ songList +
+ "</ul>"
+ return songsHtml;
+}
 
 
 function getAlbumHtml(album) {
@@ -97,15 +189,22 @@ function getAlbumHtml(album) {
   "                      <li class='list-group-item'>" +
   "                        <h4 class='inline-header'>Album Name:</h4>" +
   "                        <span class='album-name'>" + album.name + "</span>" +
+                          // added hidden input field to edit album name:
+                          "<span class='hidden edit-album-name'><input type='text' value=" + album.name + "></span>" +
   "                      </li>" +
   "                      <li class='list-group-item'>" +
   "                        <h4 class='inline-header'>Artist Name:</h4>" +
   "                        <span class='artist-name'>" + album.artistName + "</span>" +
+                         // added hidden input field to edit artist name:
+                          "<span class='hidden edit-artist-name'><input type='text' value=" + album.artistName + "></span>" +
   "                      </li>" +
   "                      <li class='list-group-item'>" +
   "                        <h4 class='inline-header'>Released date:</h4>" +
   "                        <span class='album-releaseDate'>" + album.releaseDate + "</span>" +
+                         // added hidden input field to edit release date:
+                          "<span class='hidden edit-album-releaseDate'><input type='text' value=" + album.releaseDate + "></span>" +
   "                      </li>" +
+  buildSongsHtml(album.songs) +
   "                    </ul>" +
   "                  </div>" +
   "                </div>" +
@@ -114,6 +213,11 @@ function getAlbumHtml(album) {
   "              </div>" + // end of panel-body
 
   "              <div class='panel-footer'>" +
+  "<button type='button' class='btn btn-primary add-song' data-toggle='modal' data-target='#songModal'>Add Song</button>" +
+  "<button class='btn btn-info edit-album'>Edit Album</button>" +
+  // added hidden save changes button 
+  "<button class='btn btn-info save-changes hidden'>Save Changes</button>" +
+  "<button type='button' class='btn btn-danger delete'>Delete</button>" +
   "              </div>" +
 
   "            </div>" +
@@ -130,10 +234,8 @@ function getAllAlbumsHtml(albums) {
 function render () {
   // empty existing posts from view
   $albumList.empty();
-
-  // pass `allBooks` into the template function
+  // pass `allAlbums` into the template function
   var albumsHtml = getAllAlbumsHtml(allAlbums);
-
   // append html to the view
   $albumList.append(albumsHtml);
 };
@@ -148,21 +250,32 @@ function newAlbumError() {
   console.log('new album error!');
 }
 
-
-
-  function handleSuccess(json) {
-    allAlbums = json;
-    render();
+function newSongSuccess(json) {
+  //clear fields in add new song modal
+  $("#songName").val("");
+  $("#trackNumber").val("");
+  //find updated album id and replace album with updated version
+  for (let i = 0; i < allAlbums.length; i++) {
+    if (json._id === allAlbums[i]._id) {
+      allAlbums.splice(i, 1, json);
+    }
   }
+  render();
+}
 
-  function handleError(e) {
-    console.log('uh oh');
-    $('#albums').text('Failed to load albums, is the server working?');
-  }
+function newSongError() {
+  console.log('new song error!');
+}
 
+function handleSuccess(json) {
+  allAlbums = json;
+  render();
+}
 
-
-
+function handleError(e) {
+  console.log('uh oh');
+  $('#albums').text('Failed to load albums, is the server working?');
+}
 
 
 // this function takes a single album and renders it to the page

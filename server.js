@@ -56,6 +56,21 @@ app.get('/api/albums', (request, response) => {
   });
 });
 
+app.get('/api/albums/:id', (request, response) => {
+  db.Album.findById(request.params.id, (err, album) => {
+    response.json(album);
+  })
+})
+
+app.get('/api/albums/:album_id/songs', (request, response) => {
+  db.Album.findById(request.params.album_id, (err, album) => {
+    if (err) {
+        response.status(500).send(err);
+    }
+    response.json(album.songs);
+  })
+})
+
 app.post('/api/albums', (request, response) => {
   let album = new db.Album(request.body);
   album.save((err, createdAlbumObject) => {
@@ -64,6 +79,29 @@ app.post('/api/albums', (request, response) => {
     }
     response.status(200).send(createdAlbumObject);
   });
+})
+
+app.post('/api/albums/:album_id/songs', (request, response) => {
+  db.Album.findByIdAndUpdate(
+    request.body.album_id,
+    {$push: {songs: request.body.song}},
+    {safe: true, upsert: true, new: true},
+    function(err, model) {
+      if (err) {
+        response.status(500).send(err);
+      }
+      response.status(200).send(model);
+    }
+  );
+})
+
+app.delete('/api/albums/:album_id', (request, response) => {
+  db.Album.findByIdAndRemove(request.params.album_id, (err, todo) => {
+    if (err) {
+      response.status(500).send(err);
+    }
+    response.status(200).send(todo);
+  })
 })
 
 /**********
