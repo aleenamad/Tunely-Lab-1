@@ -97,7 +97,16 @@ $(document).ready(function(){
   $(document).on('click', '.delete', (e) => {
     handleDeleteButton(e);
   })
+
+  $(document).on('click', '.edit-album', (e) => {
+    handleEditAlbumButton(e);
+  })
 });
+
+const handleEditAlbumButton = (e) => {
+  e.preventDefault();
+  console.log(e);
+}
 
 const handleNewSongSubmit = (e) => {
   e.preventDefault();
@@ -180,14 +189,20 @@ function getAlbumHtml(album) {
   "                      <li class='list-group-item'>" +
   "                        <h4 class='inline-header'>Album Name:</h4>" +
   "                        <span class='album-name'>" + album.name + "</span>" +
+                          // added hidden input field to edit album name:
+                          "<span class='hidden edit-album-name'><input type='text' value=" + album.name + "></span>" +
   "                      </li>" +
   "                      <li class='list-group-item'>" +
   "                        <h4 class='inline-header'>Artist Name:</h4>" +
   "                        <span class='artist-name'>" + album.artistName + "</span>" +
+                         // added hidden input field to edit artist name:
+                          "<span class='hidden edit-artist-name'><input type='text' value=" + album.artistName + "></span>" +
   "                      </li>" +
   "                      <li class='list-group-item'>" +
   "                        <h4 class='inline-header'>Released date:</h4>" +
   "                        <span class='album-releaseDate'>" + album.releaseDate + "</span>" +
+                         // added hidden input field to edit release date:
+                          "<span class='hidden edit-album-releaseDate'><input type='text' value=" + album.releaseDate + "></span>" +
   "                      </li>" +
   buildSongsHtml(album.songs) +
   "                    </ul>" +
@@ -199,6 +214,9 @@ function getAlbumHtml(album) {
 
   "              <div class='panel-footer'>" +
   "<button type='button' class='btn btn-primary add-song' data-toggle='modal' data-target='#songModal'>Add Song</button>" +
+  "<button class='btn btn-info edit-album'>Edit Album</button>" +
+  // added hidden save changes button 
+  "<button class='btn btn-info save-changes hidden'>Save Changes</button>" +
   "<button type='button' class='btn btn-danger delete'>Delete</button>" +
   "              </div>" +
 
