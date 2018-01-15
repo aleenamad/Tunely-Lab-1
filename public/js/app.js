@@ -93,6 +93,10 @@ $(document).ready(function(){
       handleNewSongSubmit(e);
     }
   });
+
+  $(document).on('click', '.delete', (e) => {
+    handleDeleteButton(e);
+  })
 });
 
 const handleNewSongSubmit = (e) => {
@@ -114,6 +118,30 @@ const handleNewSongSubmit = (e) => {
   })
 }
 
+const handleDeleteButton = (e) => {
+  e.preventDefault();
+  let targetAlbumId = e.target.parentElement.parentNode.parentNode.parentNode.dataset.albumId;
+  let url = '/api/albums/' + targetAlbumId;
+  $.ajax({
+    method: 'DELETE',
+    url: url,
+    success: deleteAlbumSuccess,
+    error: deleteAlbumError
+  })
+}
+
+const deleteAlbumSuccess = (json) => {
+  for (let i = 0; i < allAlbums.length; i++) {
+    if (json._id === allAlbums[i]._id) {
+      allAlbums.splice(i, 1);
+    }
+  }
+  render();
+}
+
+const deleteAlbumError = () => {
+  console.log('delete album error!');
+}
 
 
 function getSongHtml(song) {
@@ -171,6 +199,7 @@ function getAlbumHtml(album) {
 
   "              <div class='panel-footer'>" +
   "<button type='button' class='btn btn-primary add-song' data-toggle='modal' data-target='#songModal'>Add Song</button>" +
+  "<button type='button' class='btn btn-danger delete'>Delete</button>" +
   "              </div>" +
 
   "            </div>" +

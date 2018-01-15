@@ -95,6 +95,15 @@ app.post('/api/albums/:album_id/songs', (request, response) => {
   );
 })
 
+app.delete('/api/albums/:album_id', (request, response) => {
+  db.Album.findByIdAndRemove(request.params.album_id, (err, todo) => {
+    if (err) {
+      response.status(500).send(err);
+    }
+    response.status(200).send(todo);
+  })
+})
+
 /**********
  * SERVER *
  **********/
