@@ -101,7 +101,44 @@ $(document).ready(function(){
   $(document).on('click', '.edit-album', (e) => {
     handleEditAlbumButton(e);
   })
+  $(document).on('click', '.save-changes', (e) => {
+    handleSaveChangesButton(e);
+  })
 });
+
+const handleSaveChangesButton = (e) => {
+  e.preventDefault();
+  let albumToUpdateId = e.target.parentNode.parentNode.parentNode.parentNode.dataset.albumId;
+  let albumToUpdateUrl = '/api/albums/' + albumToUpdateId;
+  console.log(albumToUpdateId);
+  let updatedAlbumName = e.target.parentNode.parentNode.childNodes[1].childNodes[3].childNodes[3].childNodes[1].childNodes[1].childNodes[4].childNodes[0].value;
+  let updatedArtistName = e.target.parentNode.parentNode.childNodes[1].childNodes[3].childNodes[3].childNodes[1].childNodes[3].childNodes[4].childNodes[0].value;
+  let updatedReleaseDate = e.target.parentNode.parentNode.childNodes[1].childNodes[3].childNodes[3].childNodes[1].childNodes[5].childNodes[4].childNodes[0].value;
+  $.ajax({
+    method: 'PUT',
+    url: albumToUpdateUrl,
+    data: {
+      name: updatedAlbumName,
+      artistName: updatedArtistName,
+      releaseDate: updatedReleaseDate
+    },
+    success: updatedAlbumSuccess,
+    error: updatedAlbumError
+  })
+}
+
+const updatedAlbumSuccess = (json) => {
+  for (let i = 0; i < allAlbums.length; i++) {
+    if (json._id === allAlbums[i]._id) {
+      allAlbums.splice(i, 1, json);
+    }
+  }
+  render();
+}
+
+const updatedAlbumError = () => {
+  console.log('updated album error!');
+}
 
 const handleEditAlbumButton = (e) => {
   e.preventDefault();
@@ -113,7 +150,7 @@ const handleEditAlbumButton = (e) => {
   $.ajax({
     method: 'GET',
     url: albumToEditUrl,
-    success: updateReleaseDateInput,
+    success: updateInputFields,
     error: handleError
   });
   e.target.parentNode.parentNode.childNodes[1].childNodes[3].childNodes[3].childNodes[1].childNodes[1].childNodes[3].classList.add('hidden');
@@ -125,10 +162,11 @@ const handleEditAlbumButton = (e) => {
 
 }
 
-const updateReleaseDateInput = (json) => {
+const updateInputFields = (json) => {
   console.log(json);
+  document.querySelectorAll(`[data-album-id='${json._id}']`)["0"].childNodes[1].childNodes[1].childNodes[1].childNodes[3].childNodes[3].childNodes[1].childNodes[1].childNodes[4].childNodes["0"].setAttribute("value",json.name);
+  document.querySelectorAll(`[data-album-id='${json._id}']`)["0"].childNodes[1].childNodes[1].childNodes[1].childNodes[3].childNodes[3].childNodes[1].childNodes[3].childNodes[4].childNodes["0"].setAttribute("value",json.artistName);
   document.querySelectorAll(`[data-album-id='${json._id}']`)["0"].childNodes[1].childNodes[1].childNodes[1].childNodes[3].childNodes[3].childNodes[1].childNodes[5].childNodes[4].childNodes[0].setAttribute("value",json.releaseDate);
-  //.firstElementChild.firstElementChild.firstElementChild.firstElementChild.children[1].firstElementChild.children[2]
 }
 
 const handleNewSongSubmit = (e) => {
