@@ -106,6 +106,29 @@ $(document).ready(function(){
 const handleEditAlbumButton = (e) => {
   e.preventDefault();
   console.log(e);
+  let albumToEditId = e.target.parentNode.parentNode.parentNode.parentNode.dataset.albumId;
+  let albumToEditUrl = '/api/albums/' + albumToEditId;
+  e.target.setAttribute('class', 'hidden');
+  e.target.parentNode.childNodes["2"].classList.remove('hidden');
+  $.ajax({
+    method: 'GET',
+    url: albumToEditUrl,
+    success: updateReleaseDateInput,
+    error: handleError
+  });
+  e.target.parentNode.parentNode.childNodes[1].childNodes[3].childNodes[3].childNodes[1].childNodes[1].childNodes[3].classList.add('hidden');
+  e.target.parentNode.parentNode.childNodes[1].childNodes[3].childNodes[3].childNodes[1].childNodes[1].childNodes[4].classList.remove('hidden');
+  e.target.parentNode.parentNode.childNodes[1].childNodes[3].childNodes[3].childNodes[1].childNodes[3].childNodes[3].classList.add('hidden');
+  e.target.parentNode.parentNode.childNodes[1].childNodes[3].childNodes[3].childNodes[1].childNodes[3].childNodes[4].classList.remove('hidden');
+  e.target.parentNode.parentNode.childNodes[1].childNodes[3].childNodes[3].childNodes[1].childNodes[5].childNodes[3].classList.add('hidden');
+  e.target.parentNode.parentNode.childNodes[1].childNodes[3].childNodes[3].childNodes[1].childNodes[5].childNodes[4].classList.remove('hidden');
+
+}
+
+const updateReleaseDateInput = (json) => {
+  console.log(json);
+  document.querySelectorAll(`[data-album-id='${json._id}']`)["0"].childNodes[1].childNodes[1].childNodes[1].childNodes[3].childNodes[3].childNodes[1].childNodes[5].childNodes[4].childNodes[0].setAttribute("value",json.releaseDate);
+  //.firstElementChild.firstElementChild.firstElementChild.firstElementChild.children[1].firstElementChild.children[2]
 }
 
 const handleNewSongSubmit = (e) => {
@@ -215,7 +238,7 @@ function getAlbumHtml(album) {
   "              <div class='panel-footer'>" +
   "<button type='button' class='btn btn-primary add-song' data-toggle='modal' data-target='#songModal'>Add Song</button>" +
   "<button class='btn btn-info edit-album'>Edit Album</button>" +
-  // added hidden save changes button 
+  // added hidden save changes button
   "<button class='btn btn-info save-changes hidden'>Save Changes</button>" +
   "<button type='button' class='btn btn-danger delete'>Delete</button>" +
   "              </div>" +
