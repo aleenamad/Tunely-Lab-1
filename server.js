@@ -95,6 +95,26 @@ app.post('/api/albums/:album_id/songs', (request, response) => {
   );
 })
 
+app.put('/api/albums/:album_id', (request, response) => {
+  db.Album.findByIdAndUpdate(
+    request.params.album_id,
+    {
+      name: request.body.name,
+      artistName: request.body.artistName,
+      releaseDate: request.body.releaseDate
+    },
+    {new: true},
+    function(err, model) {
+      console.log(model);
+      if (err) {
+        response.status(500).send(err);
+      }
+      response.status(200).send(model);
+    }
+  );
+})
+
+
 app.delete('/api/albums/:album_id', (request, response) => {
   db.Album.findByIdAndRemove(request.params.album_id, (err, todo) => {
     if (err) {

@@ -101,11 +101,72 @@ $(document).ready(function(){
   $(document).on('click', '.edit-album', (e) => {
     handleEditAlbumButton(e);
   })
+  $(document).on('click', '.save-changes', (e) => {
+    handleSaveChangesButton(e);
+  })
 });
+
+const handleSaveChangesButton = (e) => {
+  e.preventDefault();
+  let albumToUpdateId = e.target.parentNode.parentNode.parentNode.parentNode.dataset.albumId;
+  let albumToUpdateUrl = '/api/albums/' + albumToUpdateId;
+  console.log(albumToUpdateId);
+  let updatedAlbumName = e.target.parentNode.parentNode.childNodes[1].childNodes[3].childNodes[3].childNodes[1].childNodes[1].childNodes[4].childNodes[0].value;
+  let updatedArtistName = e.target.parentNode.parentNode.childNodes[1].childNodes[3].childNodes[3].childNodes[1].childNodes[3].childNodes[4].childNodes[0].value;
+  let updatedReleaseDate = e.target.parentNode.parentNode.childNodes[1].childNodes[3].childNodes[3].childNodes[1].childNodes[5].childNodes[4].childNodes[0].value;
+  $.ajax({
+    method: 'PUT',
+    url: albumToUpdateUrl,
+    data: {
+      name: updatedAlbumName,
+      artistName: updatedArtistName,
+      releaseDate: updatedReleaseDate
+    },
+    success: updatedAlbumSuccess,
+    error: updatedAlbumError
+  })
+}
+
+const updatedAlbumSuccess = (json) => {
+  for (let i = 0; i < allAlbums.length; i++) {
+    if (json._id === allAlbums[i]._id) {
+      allAlbums.splice(i, 1, json);
+    }
+  }
+  render();
+}
+
+const updatedAlbumError = () => {
+  console.log('updated album error!');
+}
 
 const handleEditAlbumButton = (e) => {
   e.preventDefault();
   console.log(e);
+  let albumToEditId = e.target.parentNode.parentNode.parentNode.parentNode.dataset.albumId;
+  let albumToEditUrl = '/api/albums/' + albumToEditId;
+  e.target.setAttribute('class', 'hidden');
+  e.target.parentNode.childNodes["2"].classList.remove('hidden');
+  $.ajax({
+    method: 'GET',
+    url: albumToEditUrl,
+    success: updateInputFields,
+    error: handleError
+  });
+  e.target.parentNode.parentNode.childNodes[1].childNodes[3].childNodes[3].childNodes[1].childNodes[1].childNodes[3].classList.add('hidden');
+  e.target.parentNode.parentNode.childNodes[1].childNodes[3].childNodes[3].childNodes[1].childNodes[1].childNodes[4].classList.remove('hidden');
+  e.target.parentNode.parentNode.childNodes[1].childNodes[3].childNodes[3].childNodes[1].childNodes[3].childNodes[3].classList.add('hidden');
+  e.target.parentNode.parentNode.childNodes[1].childNodes[3].childNodes[3].childNodes[1].childNodes[3].childNodes[4].classList.remove('hidden');
+  e.target.parentNode.parentNode.childNodes[1].childNodes[3].childNodes[3].childNodes[1].childNodes[5].childNodes[3].classList.add('hidden');
+  e.target.parentNode.parentNode.childNodes[1].childNodes[3].childNodes[3].childNodes[1].childNodes[5].childNodes[4].classList.remove('hidden');
+
+}
+
+const updateInputFields = (json) => {
+  console.log(json);
+  document.querySelectorAll(`[data-album-id='${json._id}']`)["0"].childNodes[1].childNodes[1].childNodes[1].childNodes[3].childNodes[3].childNodes[1].childNodes[1].childNodes[4].childNodes["0"].setAttribute("value",json.name);
+  document.querySelectorAll(`[data-album-id='${json._id}']`)["0"].childNodes[1].childNodes[1].childNodes[1].childNodes[3].childNodes[3].childNodes[1].childNodes[3].childNodes[4].childNodes["0"].setAttribute("value",json.artistName);
+  document.querySelectorAll(`[data-album-id='${json._id}']`)["0"].childNodes[1].childNodes[1].childNodes[1].childNodes[3].childNodes[3].childNodes[1].childNodes[5].childNodes[4].childNodes[0].setAttribute("value",json.releaseDate);
 }
 
 const handleNewSongSubmit = (e) => {
@@ -215,7 +276,7 @@ function getAlbumHtml(album) {
   "              <div class='panel-footer'>" +
   "<button type='button' class='btn btn-primary add-song' data-toggle='modal' data-target='#songModal'>Add Song</button>" +
   "<button class='btn btn-info edit-album'>Edit Album</button>" +
-  // added hidden save changes button 
+  // added hidden save changes button
   "<button class='btn btn-info save-changes hidden'>Save Changes</button>" +
   "<button type='button' class='btn btn-danger delete'>Delete</button>" +
   "              </div>" +
